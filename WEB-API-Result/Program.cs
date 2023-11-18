@@ -23,6 +23,27 @@ namespace WEB_API_Result
 
             Console.WriteLine("-----------");
             await GetNorthWindCustomer(customerID);
+
+            Console.WriteLine("-----------");
+            Console.WriteLine("[HttpGet]  static async Task IsPrime(int id)");
+
+            Console.WriteLine("-----------");
+            int primeNumber = 13;
+            await IsPrime(primeNumber);
+
+            Console.WriteLine("-----------");
+            Console.WriteLine("[HttpGet] static async Task BinaryToDecimal(string id)");
+
+            Console.WriteLine("-----------");
+            string bToDec = "1110011";
+            await BinaryToDecimal(bToDec);
+
+            Console.WriteLine("-----------");
+            Console.WriteLine("[HttpGet]  public static async Task DecimalToBinary(int id)");
+
+            Console.WriteLine("-----------");
+            int decToBinary = 115;
+            await DecimalToBinary(decToBinary);
         }
         public static async Task GetNorthwindCustomers()
         {
@@ -43,9 +64,9 @@ namespace WEB_API_Result
                 getWebApiContent = await responseMessage.Content.ReadAsStringAsync();
 
                 List<GetNorthwindCustomers> datas = JsonSerializer.Deserialize<List<GetNorthwindCustomers>>(getWebApiContent, options);
-           
 
-                foreach(var data in datas)
+
+                foreach (var data in datas)
                 {
                     Console.WriteLine($"{data.CustomerID}\t{data.CompanyName}\t{data.ContactName}\t{data.ContactTitle}\t{data.Address}\t{data.City}\t {data.Region} \t{data.PostalCode}\t {data.Country}\t{data.Phone}\t{data.Fax}");
                 }
@@ -77,6 +98,87 @@ namespace WEB_API_Result
                 }
 
             }
+        }
+        public static async Task IsPrime(int id)
+        {
+            using (HttpClient webApiClient = new HttpClient())
+            {
+                webApiClient.BaseAddress = new Uri(BaseURL);
+                webApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+                HttpResponseMessage responeMessage = await webApiClient.GetAsync($"/api/Prime/{id}");
+
+                if (responeMessage.IsSuccessStatusCode)
+                {
+
+                    string getWebApiContent = await responeMessage.Content.ReadAsStringAsync();
+                    bool isPrime = JsonSerializer.Deserialize<bool>(getWebApiContent, options);
+
+                    Console.WriteLine($"{id} is Prime Number :  {isPrime}");
+                }
+                else
+                {
+                    Console.WriteLine("API Request FAILED!");
+                }
+
+            }
+
+        }
+        public static async Task BinaryToDecimal(string id)
+        {
+            using (HttpClient webApiClient = new HttpClient())
+            {
+                webApiClient.BaseAddress = new Uri(BaseURL);
+                webApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+                HttpResponseMessage responeMessage = await webApiClient.GetAsync($"/api/BinaryToDecimal/{id}");
+
+                if (responeMessage.IsSuccessStatusCode)
+                {
+
+                    string getWebApiContent = await responeMessage.Content.ReadAsStringAsync();
+                    int Decimal = JsonSerializer.Deserialize<int>(getWebApiContent, options);
+
+                    Console.WriteLine($"Binary : {id}  Convert To Decimal:  {Decimal}");
+                }
+                else
+                {
+                    Console.WriteLine("API Request FAILED!");
+                }
+
+            }
+
+        }
+        public static async Task DecimalToBinary(int id)
+        {
+            using (HttpClient webApiClient = new HttpClient())
+            {
+                webApiClient.BaseAddress = new Uri(BaseURL);
+                webApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+                HttpResponseMessage responeMessage = await webApiClient.GetAsync($"/api/DecimalToBinary/{id}");
+
+                if (responeMessage.IsSuccessStatusCode)
+                {
+
+                    string getWebApiContent = await responeMessage.Content.ReadAsStringAsync();
+                    string binary = JsonSerializer.Deserialize<string>(getWebApiContent, options);
+
+                    Console.WriteLine($"Decimal : {id}  Convert To Binary:  {binary}");
+                }
+                else
+                {
+                    Console.WriteLine("API Request FAILED!");
+                }
+
+            }
+
         }
     }
 }
